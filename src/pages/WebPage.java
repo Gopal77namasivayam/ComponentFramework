@@ -1,6 +1,7 @@
 package pages;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -8,36 +9,33 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
-import org.openqa.selenium.support.events.WebDriverEventListener;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import reports.Report;
-import utils.WebDriverEventListenerClass;
+import utils.Events;
+import controls.ElementFinder;
 
 public class WebPage {
+
+	
 	/**
 	 * elementList is a map which contains component and its description, this map is utilized in report generation for writing the details of the 
-	 * actions performed of the web elements
+	 * actions performed on the web elements
 	 * 
 	 */
 	public static HashMap<Object, String> elementList = new HashMap<Object, String>();
+	public static Hashtable<Object, String> elementList2 = new Hashtable<Object, String>();
 	public static String PAGE_URL = "";
-	public static EventFiringWebDriver driver =null;
+	public FirefoxDriver driver =null;
+	public ElementFinder util=new ElementFinder(driver);
+	public Events events=new Events(driver);
+//	public String env=""; 
+	public static boolean screenshotRequired=true;
+	public static Integer  retryCount;
 	/*private static String ScreenShotInitial="<a href=\"./screenshot/";
 	private static String ScreenShotEnd=".png\"  target=\"_blank\"> SCREEN SHOT </a> \n";*/
-	static{
-		FirefoxProfile profile = new FirefoxProfile();
-	    profile.setPreference("network.http.phishy-userpass-length", 255);
-	    profile.setAssumeUntrustedCertificateIssuer(false);
-	    driver = new EventFiringWebDriver(new FirefoxDriver(profile));
-	    WebDriverEventListener errorListener = new WebDriverEventListenerClass();
-	    driver.register(errorListener);
-	}
-	
-	
 	
 	/**
 	 * Constructor method, initialize webdriver instance, initialize page URL
@@ -49,9 +47,12 @@ public class WebPage {
 	 * @param pageURL
 	 */
 	public WebPage(WebDriver webDriver, String pageURL) {
-		driver =(EventFiringWebDriver)webDriver;
+		driver =(FirefoxDriver)webDriver;
 		PAGE_URL = pageURL;
 		webDriver.get(PAGE_URL);
+		webDriver.manage().window().maximize();
+		util=new ElementFinder(driver);
+		events=new Events(driver);
 	}
 	
 	
@@ -64,22 +65,33 @@ public class WebPage {
 	 * @param webDriver
 	 */
 	public WebPage(WebDriver webDriver) {
-		driver = (EventFiringWebDriver)webDriver;
-		webDriver.get(PAGE_URL);
+		driver = (FirefoxDriver)webDriver;
+		util=new ElementFinder(driver);
+		events=new Events(driver);
 	}
 	
 	/**
 	 * Constructor, opens the page with passed URL
 	 * @param PageURL
 	 */
-	public WebPage(String PageURL) {
+	public WebPage(String PageURL){
+		/*FirefoxProfile profile = new FirefoxProfile();
+	    profile.setPreference("network.http.phishy-userpass-length", 255);
+	    profile.setAssumeUntrustedCertificateIssuer(false);
+	    driver = new EventFiringWebDriver(new FirefoxDriver(profile));
+	    WebDriverEventListener errorListener = new WebDriverEventListenerClass();
+	    driver.register(errorListener);*/
 		driver.get(PageURL);
+		util=new ElementFinder(driver);
+		events=new Events(driver);
 	}
 	
 	/**
 	 * Default Constructor
 	 */
 	public WebPage() {
+	    util=new ElementFinder(driver);
+		events=new Events(driver);
 	}
 	
 	/**
@@ -90,6 +102,14 @@ public class WebPage {
 	 * @param env
 	 */
 	public WebPage(String PageURL, String env) {
+		FirefoxProfile profile = new FirefoxProfile();
+	    profile.setPreference("network.http.phishy-userpass-length", 255);
+	    profile.setAssumeUntrustedCertificateIssuer(false);
+	    driver = new FirefoxDriver(profile);
+	    /*WebDriverEventListener errorListener = new WebDriverEventListenerClass();
+	    driver.register(errorListener);*/
+	    util=new ElementFinder(driver);
+		events=new Events(driver);
 		if(PageURL.contains("dev")){
 			PageURL=PageURL.replaceAll("dev", env);
 		}
@@ -101,18 +121,39 @@ public class WebPage {
 		}
 		driver.get(PageURL);
 	}
+	
+	public WebPage(WebDriver webDriver,String PageURL, String env) {
+//		this.env=env;
+	    driver = (FirefoxDriver)webDriver;
+	    util=new ElementFinder(driver);
+		events=new Events(driver);
+		if(PageURL.contains("dev")){
+			PageURL=PageURL.replaceAll("dev", env);
+		}
+		if(PageURL.contains("test")){
+			PageURL=PageURL.replaceAll("test", env);
+		}
+		if(PageURL.contains("stage")){
+			PageURL=PageURL.replaceAll("stage", env);
+		}
+		driver.get(PageURL);
+	}
+	
 
 	/**
 	 * This method will wait for the element specified for 60 seconds 
 	 * @author Pradeep Sundaram
 	 * @param by
-	 * 
 	 */
 	public void waitForElementPresent(By by) {
-		
 		Report.log("Waiting for the element to load " + by.toString());
 		WebDriverWait wait = new WebDriverWait(driver, 60);
+		ExpectedConditions.visibilityOf(null);
 		wait.until(ExpectedConditions.presenceOfElementLocated(by));
+	}
+	
+	public void sleep(long timeInSec) throws InterruptedException{
+		Thread.sleep(timeInSec);
 	}
 	
 	/**
@@ -128,7 +169,6 @@ public class WebPage {
 		Report.log("Waiting for the element to load " + by.toString());
 		WebDriverWait wait = new WebDriverWait(driver, timeToWait);
 		wait.until(ExpectedConditions.presenceOfElementLocated(by));
-
 	}
 	
 	
@@ -143,6 +183,15 @@ public class WebPage {
 		Report.log("Accepting the alert <BR>");
 		driver.switchTo().defaultContent();
 		
+	}
+	
+	/**
+	 * This method will return the alert text
+	 * @return
+	 */
+	public String getAlertText(){
+		Alert alert = driver.switchTo().alert();
+		return alert.getText();
 	}
 	
 	/**
@@ -240,4 +289,25 @@ public class WebPage {
 		Assert.assertFalse(isTextPresent(text));
 	}
 	
+	/**
+	 * This method will close all the browsers opened 
+	 * 
+	 * @author pradeep
+	 */
+	public void quit()
+	{
+		driver.quit();
+	}
+	
+	/**
+	 * This method will return true if the element is available in the page
+	 * and false if not
+	 * 
+	 * @author pradeep
+	 * @param by
+	 * @return
+	 */
+	public boolean isElementPresent(WebElement webElement){
+		return webElement.isDisplayed();
+	}
 }
