@@ -5,142 +5,108 @@ import org.openqa.selenium.WebElement;
 
 import pages.WebPage;
 import reports.Report;
-import utils.Events;
+import exception.CFException;
 
 public class TextField {
-
+	
 	private WebElement textField;
 	private By by;
 	String txtDescription;
-	private Events events;
-
 	/**
 	 * This method will return the By of the text field
-	 * 
 	 * @author Pradeep Sundaram
 	 * @return
 	 */
-	public By getBy() {
+	public By getBy(){
 		return by;
 	}
-
+	
 	/**
 	 * This method will return the webElement of the text field
-	 * 
 	 * @author Pradeep Sundaram
-	 * @return
+	 * @return 
 	 */
-	public WebElement getWebElement() {
+	public WebElement getWebElement(){
+		textField=ElementUtil.findElement(by);
 		return textField;
 	}
-
-	/**
-	 * Text field Constructor
-	 * 
-	 * @author Pradeep Sundaram
-	 * @param textID
-	 * @param fieldDesc
-	 * @param util
-	 * @param events
-	 */
-	public TextField(String textID, String fieldDesc, ElementFinder util,
-			Events events) {
-		this.events = events;
-		if (textID.startsWith("id")) {
-			textField = util.findElementByID(textID);
-		} else if (textID.startsWith("name")) {
-			textField = util.findElementByName(textID);
-		} else if (textID.startsWith("css")) {
-			textField = util.findElementByCss(textID);
-		} else if (textID.startsWith("//")) {
-			textField = util.findElementByXpath(textID);
+	
+	public TextField(String textID,String fieldDesc){
+		txtDescription=fieldDesc;
+		/*if(textID.startsWith("id")){
+			by=ElementUtil.byID(textID);
 		}
-		WebPage.elementList.put(textField, fieldDesc);
-	}
-
-	/**
-	 * Text field Constructor with By
-	 * 
-	 * @param textID
-	 * @param byOfTf
-	 * @param fieldDesc
-	 * @param util
-	 * @param events
-	 */
-	public TextField(String textID, By byOfTf, String fieldDesc,
-			ElementFinder util, Events events) {
-		this.events = events;
-		if (textID.startsWith("id")) {
-			textField = util.findElementByID(textID);
-		} else if (textID.startsWith("name")) {
-			textField = util.findElementByName(textID);
-		} else if (textID.startsWith("css")) {
-			textField = util.findElementByCss(textID);
+		else*/ if(textID.startsWith("name")){
+			by=ElementUtil.byName(textID);
 		}
-		by = byOfTf;
-		WebPage.elementList.put(textField, fieldDesc);
+		else if(textID.startsWith("css")){
+			by=ElementUtil.byCss(textID);
+		}
+		else if(textID.startsWith("//")){
+			by=ElementUtil.byXpath(textID);
+		}
+		else{
+			by=ElementUtil.byIDOrName(textID);
+		}
 	}
-
+	
 	/**
 	 * This method will type the text in Text Field
 	 * 
 	 * @author Pradeep Sundaram
 	 * @param text
 	 */
-	public void type(String text) {
-		events.type(textField, text);
+	public void type(String text){
+		textField=ElementUtil.findElement(by);
+		WebPage.elementList.put(textField, txtDescription);
+		try {
+			ElementUtil.type(textField, text);
+		} catch (CFException e) {
+			e.printStackTrace();
+		}
 	}
-
+	
 	/**
 	 * This method will click in the Text Field for Date controls
 	 * 
 	 * @author Pradeep Sundaram
 	 */
-	public void click() {
-		events.click(textField);
-	}
-
-	/**
-	 * this method will double click on the text
-	 * 
-	 * @author Pradeep Sundaram
-	 */
-	public void doubleClick() {
-		events.doubleClick(textField);
-	}
-
+	/*public void click()  {
+		Events.click(textField);
+	}*/
+	
 	/**
 	 * This method will return the text in the text field
 	 * 
 	 * @author Pradeep Sundaram
 	 * @return String
-	 */
-	public String getText() {
-		return textField.getAttribute("value");
+	 */ 
+	public String getText(){
+		textField=ElementUtil.findElement(by);
+		return textField.getAttribute("value");	
 	}
-
+	
 	/**
 	 * will return boolean based on the presence of the text field
 	 * 
+	 * @author Pradeep Sundaram S
 	 * @return boolean
 	 */
 	public boolean isDisplayed() {
+		textField=ElementUtil.findElement(by);
+		Report.log("Checking whether the field \"" + WebPage.elementList.get(textField)+"\" is displayed.<BR>");
 		return textField.isDisplayed();
-	}
-
-	public void setTextField(WebElement textField) {
-		this.textField = textField;
-	}
-
+	}	
 	/**
-	 * This method will return the tool tip of the Text Field
+	 * will return true if the text field is enabled else false will be returned
 	 * 
-	 * @author PSubramani33
-	 * @return String
+	 * @author Pradeep Sundaram 
+	 * @return boolean
 	 */
-	public String getToolTip() {
-		Report.log("Getting the tool tip of the button "
-				+ WebPage.elementList.get(textField) + ".<BR>");
-		return textField.getAttribute("title");
+	public boolean isEnabled() {
+		textField=ElementUtil.findElement(by);
+		Report.log("Checking whether the field \"" + WebPage.elementList.get(textField)+"\" is displayed.<BR>");
+		return textField.isEnabled();
 	}
+	
 }

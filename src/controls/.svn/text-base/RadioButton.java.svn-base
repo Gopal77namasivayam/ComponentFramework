@@ -5,112 +5,97 @@ import org.openqa.selenium.WebElement;
 
 import pages.WebPage;
 import reports.Report;
-import utils.Events;
+import exception.CFException;
 
 public class RadioButton {
 	private WebElement radioButton;
 	private By by;
-	private Events events;
-
+//	private ElementUtil elementUtil;
+	
 	/**
-	 * Constructor of radio button
+	 * Constructor of radio button 
 	 * 
-	 * @author Pradeep Sundaram
+	 * @author PSubramani33
 	 * @param radioButtonName
 	 * @param description
 	 */
-	public RadioButton(String radioButtonName, String description,
-			ElementFinder util, Events events) {
-		if (radioButtonName.startsWith("name")) {
-			radioButton = util.findElementByName(radioButtonName);
-		} else if (radioButtonName.startsWith("css")) {
-			radioButton = util.findElementByCss(radioButtonName);
-		} else if (radioButtonName.startsWith("//")) {
-			radioButton = util.findElementByXpath(radioButtonName);
-		} else if (radioButtonName.startsWith("id")) {
-			radioButton = util.findElementByID(radioButtonName);
-		} else if (radioButtonName.startsWith("(//")) {
-			radioButton = util.findElementByXpath(radioButtonName);
-		} else {
-			Report.log("radio button is not found");
+	public RadioButton(String radioButtonName,String description){
+		if(radioButtonName.startsWith("name")){
+			by=ElementUtil.byName(radioButtonName);
+		}
+		else if(radioButtonName.startsWith("css")){
+			by=ElementUtil.byCss(radioButtonName);
+		}
+		else if(radioButtonName.startsWith("//")){
+			by=ElementUtil.byXpath(radioButtonName);
+		}
+		else if(radioButtonName.startsWith("id")){
+			by=ElementUtil.byID(radioButtonName);
+		}
+		else{
+			System.out.println("button is not found");
 		}
 		WebPage.elementList.put(radioButton, description);
 	}
-
-	/**
-	 * Constructor for Check Box when By of the check box is required
-	 * 
-	 * @author Pradeep Sundaram
-	 * @param radioButtonName
-	 * @param byOfCheckBox
-	 * @param description
-	 */
-	public RadioButton(String radioButtonName, By byOfRadio,
-			String description, ElementFinder util) {
-		if (radioButtonName.startsWith("name")) {
-			radioButton = util.findElementByName(radioButtonName);
-		} else if (radioButtonName.startsWith("css")) {
-			radioButton = util.findElementByCss(radioButtonName);
-		} else if (radioButtonName.startsWith("//")) {
-			radioButton = util.findElementByXpath(radioButtonName);
-		} else if (radioButtonName.startsWith("id")) {
-			radioButton = util.findElementByID(radioButtonName);
-		}
-		by = byOfRadio;
-		WebPage.elementList.put(radioButton, description);
-	}
-
+	
 	/**
 	 * This method will choose the radio button
 	 * 
 	 * @author Pradeep Sundaram
 	 */
 	public void choose() {
-		events.choose(radioButton);
-
+		radioButton=ElementUtil.findElement(by);
+		try {
+			ElementUtil.choose(radioButton);
+		} catch (CFException e) {
+			e.printStackTrace();
+		}
 	}
-
+	
 	/**
 	 * This method will return the By for the Check Box
 	 * 
 	 * @author Pradeep Sundaram
-	 * @param elem
-	 * @return
+	 * @return By
 	 */
 	public By getBy() {
 		return by;
 	}
-
+	
 	/**
 	 * This method will return the webelement of the check box
 	 * 
 	 * @author Pradeep Sundaram
-	 * @return
+	 * @return WebElement
 	 */
-	public WebElement getWebElement() {
+	public WebElement getWebElement(){
+		radioButton=ElementUtil.findElement(by);
 		return radioButton;
 	}
-
+	
+	
 	/**
 	 * will return boolean based on the presence of the radio button
 	 * 
+	 * @author Pradeep Sundaram
 	 * @return boolean
 	 */
 	public boolean isDisplayed() {
-		Report.log("Checking whether the field "
-				+ WebPage.elementList.get(radioButton) + " is displayed.<BR>");
-		return radioButton.isDisplayed();
+		radioButton=ElementUtil.findElement(by);
+		Report.log("Checking whether the field \"" + WebPage.elementList.get(radioButton)+"\" is displayed.<BR>");
+      return radioButton.isDisplayed();
 	}
-
+	
 	/**
-	 * This method will return the tool tip of the radioButton
+	 * will return true when radio button is there in the page, will return true even it is not displayed in the page.
+	 * using java script the radio button may not be visible but radio button may there in the page.
 	 * 
-	 * @author PSubramani33
-	 * @return String
+	 * @author Pradeep Sundaram
+	 * @return boolean
 	 */
-	public String getToolTip() {
-		Report.log("Getting the tool tip of the button "
-				+ WebPage.elementList.get(radioButton) + ".<BR>");
-		return radioButton.getAttribute("title");
+	public boolean isEnabled() {
+		radioButton=ElementUtil.findElement(by);
+		Report.log("Checking whether the field \"" + WebPage.elementList.get(radioButton)+"\" is enabled.<BR>");
+      return radioButton.isEnabled();
 	}
 }

@@ -1,18 +1,19 @@
 package controls;
 
-import java.util.ArrayList;
+import java.io.IOException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import pages.WebPage;
 import reports.Report;
-import utils.Events;
+import exception.CFException;
 
 public class Button {
 	private WebElement button;
+	private String desc;
 	private By by;
-	private Events events;
+//	private ElementUtil elementUtil;
 
 	/**
 	 * Constructor for button when mouse over or double click is required for
@@ -24,54 +25,21 @@ public class Button {
 	 * @param util
 	 * @param events
 	 */
-	public Button(String buttonID, String buttonDesc, ElementFinder util,
-			Events events) {
-		ArrayList<Object> list=new ArrayList<Object>();
-		this.events = events;
+	public Button(String buttonID, String buttonDesc) {
+		desc=buttonDesc;
 		if (buttonID.startsWith("name")) {
-			button = util.findElementByName(buttonID);
+			by=ElementUtil.byName(buttonID);
 		} else if (buttonID.startsWith("css")) {
-			button = util.findElementByCss(buttonID);
+			by=ElementUtil.byCss(buttonID);
 		} else if (buttonID.startsWith("//")) {
-			list= util.findElementByXpath1(buttonID);
-			button=(WebElement)list.get(0);
-			by=(By)list.get(1);
-//			button = util.findElementByXpath1(buttonID);
+			by=ElementUtil.byXpath(buttonID);
 		} else if (buttonID.startsWith("id")) {
-			button = util.findElementByID(buttonID);
+			by=ElementUtil.byID(buttonID);
 		} else {
 			Report.log("button is not found");
 		}
-		WebPage.elementList.put(button, buttonDesc);
 	}
 
-	/**
-	 * Constructor for button when by is required
-	 * 
-	 * @author Pradeep Sundaram
-	 * @param buttonID
-	 * @param byOfButton
-	 * @param buttonDesc
-	 * @param util
-	 * @param events
-	 */
-	public Button(String buttonID, By byOfButton, String buttonDesc,
-			ElementFinder util, Events events) {
-		this.events = events;
-		if (buttonID.startsWith("name")) {
-			button = util.findElementByName(buttonID);
-		} else if (buttonID.startsWith("css")) {
-			button = util.findElementByCss(buttonID);
-		} else if (buttonID.startsWith("//")) {
-			button = util.findElementByXpath(buttonID);
-		} else if (buttonID.startsWith("id")) {
-			button = util.findElementByID(buttonID);
-		} else {
-			Report.log("button is not found");
-		}
-		by = byOfButton;
-		WebPage.elementList.put(button, buttonDesc);
-	}
 
 	/**
 	 * This method will return the By of the text field
@@ -87,9 +55,16 @@ public class Button {
 	 * This method will click in the button
 	 * 
 	 * @author Pradeep Sundaram
+	 * @throws IOException 
 	 */
 	public void click() {
-		events.click(button);
+		button=ElementUtil.findElement(by);
+		WebPage.elementList.put(button, desc);
+		try {
+			ElementUtil.click(button);
+		} catch (CFException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -98,7 +73,13 @@ public class Button {
 	 * @author PSubramani33
 	 */
 	public void doubleClick() {
-		events.doubleClick(button);
+		button=ElementUtil.findElement(by);
+		WebPage.elementList.put(button, desc);
+		try {
+			ElementUtil.doubleClick(button);
+		} catch (CFException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -108,6 +89,7 @@ public class Button {
 	 * @return WebElement
 	 */
 	public WebElement getWebElement() {
+		button=ElementUtil.findElement(by);
 		return button;
 	}
 
@@ -118,8 +100,8 @@ public class Button {
 	 * @return boolean
 	 */
 	public boolean isDisplayed() {
-		Report.log("Checking whether the field "
-				+ WebPage.elementList.get(button) + " is displayed.<BR>");
+		button=ElementUtil.findElement(by);
+		Report.log("Checking whether the field "+WebPage.elementList.get(button) + " is displayed.<BR>");
 		return button.isDisplayed();
 	}
 
@@ -130,8 +112,8 @@ public class Button {
 	 * @return String
 	 */
 	public String getToolTip() {
-		Report.log("Getting the tool tip of the button "
-				+ WebPage.elementList.get(button) + ".<BR>");
+		button=ElementUtil.findElement(by);
+		Report.log("Getting the tool tip of the button "+WebPage.elementList.get(button) + ".<BR>");
 		return button.getAttribute("title");
 	}
 }

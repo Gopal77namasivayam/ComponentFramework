@@ -20,7 +20,6 @@ import dto.DataObject;
 public class TextDataProvider {
 	
 	@DataProvider
-
  static Iterator<Object[]> AddtoCartDataProvider(ITestContext context) {
 		String inputFile = context.getCurrentXmlTest().getParameter("textFilePath");
 			List<DataObject> testData = getTextFileContent(inputFile);

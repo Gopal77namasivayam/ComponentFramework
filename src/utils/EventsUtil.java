@@ -10,6 +10,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import pages.WebPage;
 import reports.Report;
+import events.WindowEvents;
 
 public class EventsUtil implements KeyEvents, WindowEvents {
 
@@ -23,7 +24,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 				+ "<BR>");
 	}*/
 	
-	@Override
+	
 	public void doubleClick(WebDriver driver, WebElement webElement) {
 		builder=new Actions(driver);
 		builder.doubleClick(webElement);
@@ -31,7 +32,6 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 	}
 	
 
-	@Override
 	public void pressEscKey() {
 		try{
 			robot = new Robot();
@@ -46,7 +46,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 		
 	}
 
-	@Override
+	
 	public void pressBackSpace() {
 		try{
 			robot = new Robot();
@@ -60,7 +60,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 		
 	}
 
-	@Override
+	
 	public void pressTabKey() {
 		try{
 			robot = new Robot();
@@ -87,7 +87,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 		
 	}
 	
-	@Override
+	
 	public void pressShiftTabKey(int howManyTimes)   {
 		try{
 			robot = new Robot();
@@ -105,7 +105,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 		
 	}
 
-	@Override
+	
 	public void pressTabKey(int howManyTimes)   {
 		try{
 			robot = new Robot();
@@ -121,7 +121,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 		
 	}
 
-	@Override
+	
 	public void pressEnterKey()   {
 		try{
 			robot = new Robot();
@@ -135,7 +135,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 		
 	}
 
-	@Override
+	
 	public void pressSpaceBar()   {
 		try{
 			robot = new Robot();
@@ -148,18 +148,18 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 		
 	}
 
-	@Override
+	
 	public void selectFrame(WebDriver driver, String frameName) {
 		driver.switchTo().frame(frameName);
 		
 	}
 
-	@Override
+	
 	public void selectWindow(WebDriver driver, String windowName) {
 		driver.switchTo().window(windowName);
 	}
 
-	@Override
+	
 	public void type(String text)  {
 		try{
 			robot = new Robot();
@@ -167,7 +167,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 			String[] textArray = text.split("");
 			for (int i = 1; i < textArray.length; i++) {
 				robot.delay(500);
-				robot.keyPress(TextUtil.getAsciiValue(textArray[i]));
+				robot.keyPress(TextUtil.getAsciiVal(textArray[i]));
 				Report.log("Entering " + textArray[i]);
 			}
 		}
@@ -177,7 +177,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 		
 	}
 
-	@Override
+	
 	public void pressShiftKey() {
 		try{
 			robot = new Robot();
@@ -190,7 +190,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 		}
 	}
 	
-	@Override
+	
 	public void pressCtrlKey() {
 		try{
 			robot = new Robot();
@@ -204,7 +204,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 	}
 
 
-	@Override
+	
 	public void releaseCtrlKey() {
 		try{
 			robot = new Robot();
@@ -217,7 +217,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 		}
 	}
 
-	@Override
+	
 	public void releaseShiftKey() {
 		try{
 			robot = new Robot();
@@ -236,7 +236,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 	 * 
 	 * @author Pradeep Sundaram
 	 */
-	@Override
+	
 	public void pressDownKey() {
 		try{
 			robot = new Robot();
@@ -254,7 +254,7 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 	 * 
 	 * @author Pradeep Sundaram
 	 */
-	@Override
+	
 	public void releaseDownKey() {
 		try{
 			robot = new Robot();
@@ -265,5 +265,12 @@ public class EventsUtil implements KeyEvents, WindowEvents {
 		catch(AWTException awte){
 			awte.printStackTrace();
 		}
+	}
+
+
+
+	public void switchToMainPage(WebDriver driver) {
+		// TODO Auto-generated method stub
+		
 	}
 }

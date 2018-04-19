@@ -5,151 +5,100 @@ import org.openqa.selenium.WebElement;
 
 import pages.WebPage;
 import reports.Report;
-import utils.Events;
+import exception.CFException;
 
 public class Link {
 	private WebElement link;
 	private By by;
-	public Events events;
-	String linkName;
+//	private String linkName;
+	private String linkDesc;
+//	private ElementUtil elementUtil;
+	
 
-	/**
-	 * Link Constructor
-	 * 
-	 * @author Pradeep Sundaram
-	 * @param linkText
-	 * @param byOfLink
-	 * @param desc
-	 */
-	public Link(String linkText, String desc, ElementFinder util, Events events) {
-		this.events = events;
-		if (linkText.startsWith("id")) {
-			link = util.findElementByID(linkText);
+	public Link(String linkText,String desc){
+		linkDesc=desc;
+		if(linkText.startsWith("id")){
+			by=ElementUtil.byID(linkText);
 		}
-
-		else if (linkText.startsWith("css")) {
-			link = util.findElementByCss(linkText);
+		
+		else if(linkText.startsWith("css")){
+			by=ElementUtil.byCss(linkText);
 		}
-
-		else if (linkText.startsWith("//")) {
-			link = util.findElementByXpath(linkText);
+		
+		else if(linkText.startsWith("//")){
+			by=ElementUtil.byXpath(linkText);
 		}
-
-		else if (linkText.startsWith("link")) {
-			link = util.findElementByLinkText(linkText);
+		
+		else if(linkText.startsWith("link")){
+			by=ElementUtil.byLinkText(linkText);
 		}
-		WebPage.elementList.put(link, desc);
+		
 	}
-
-	public Link(String linkText, ElementFinder util) {
-		if (linkText.startsWith("id")) {
-			link = util.findElementByID(linkText);
-		}
-
-		else if (linkText.startsWith("css")) {
-			link = util.findElementByCss(linkText);
-		}
-
-		else if (linkText.startsWith("//")) {
-			link = util.findElementByXpath(linkText);
-		}
-
-		else if (linkText.startsWith("link")) {
-			link = util.findElementByLinkText(linkText);
-		}
+	
+	public Link(String linkText){
+		link=ElementUtil.findElementByLinkText(linkText);
 		WebPage.elementList.put(link, linkText);
 	}
-
-	public Link(String linkText, By byOfLink, ElementFinder util) {
-		if (linkText.startsWith("id")) {
-			link = util.findElementByID(linkText);
-		}
-
-		else if (linkText.startsWith("css")) {
-			link = util.findElementByCss(linkText);
-		}
-
-		else if (linkText.startsWith("//")) {
-			link = util.findElementByXpath(linkText);
-		}
-
-		else if (linkText.startsWith("link")) {
-			link = util.findElementByLinkText(linkText);
-		}
-		by = byOfLink;
-		WebPage.elementList.put(link, linkText);
-	}
-
+	
 	/**
 	 * This method will click in the link passed as argument
 	 * 
 	 * @author Pradeep Sundaram
 	 */
-	public void click() {
-		events.click(link);
+	public void click(){
+		link=ElementUtil.findElement(by);
+		WebPage.elementList.put(link, linkDesc);
+		try {
+			ElementUtil.click(link);
+		} catch (CFException e) {
+			e.printStackTrace();
+		}
 	}
-
+	
 	/**
 	 * This method will return the By for the button
 	 * 
 	 * @author Pradeep Sundaram
-	 * @param elem
-	 * @return
+	 * @return By
 	 */
 	public By getBy() {
 		return by;
 	}
-
+	
 	/**
 	 * This method will return the text displayed in the text
 	 * 
 	 * @author Pradeep Sundaram
-	 * @return
+	 * @return String
 	 */
-	public String getText() {
+	public String getText(){
+		link=ElementUtil.findElement(by);
+		WebPage.elementList.put(link, linkDesc);
 		return link.getText();
 	}
-
 	/**
 	 * This method will return the webelement of the link
-	 * 
 	 * @author Pradeep Sundaram
-	 * @return
+	 * @return WebElement
 	 */
-	public WebElement getWebElement() {
+	public WebElement getWebElement(){
+		link=ElementUtil.findElement(by);
+		WebPage.elementList.put(link, linkDesc);
 		return link;
 	}
-
+	
+	
 	/**
 	 * will return boolean based on the presence of the link
 	 * 
-	 * @author Pradeep Sundaram
+	 * @author Pradeep Sundaram 
 	 * @return boolean
 	 */
 	public boolean isDisplayed() {
-		Report.log("Checking whether the field "
-				+ WebPage.elementList.get(link) + " is displayed.<BR>");
+		link=ElementUtil.findElement(by);
+		WebPage.elementList.put(link, linkDesc);
+		Report.log("Checking whether the field \"" + WebPage.elementList.get(link)+"\" is displayed.<BR>");
 		return link.isDisplayed();
 	}
 
-	/**
-	 * This method will put the mouse over the link
-	 * 
-	 * @author Pradeep Sundaram
-	 */
-	public void mouseOver() {
-		events.mouseOver(link);
-	}
-
-	/**
-	 * This method will return the tool tip of the link
-	 * 
-	 * @author PSubramani33
-	 * @return String
-	 */
-	public String getToolTip() {
-		Report.log("Getting the tool tip of the button "
-				+ WebPage.elementList.get(link) + ".<BR>");
-		return link.getAttribute("title");
-	}
 }

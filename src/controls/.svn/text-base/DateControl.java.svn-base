@@ -4,76 +4,67 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import pages.WebPage;
-import reports.Report;
-import utils.Events;
+import exception.CFException;
 
 public class DateControl {
 	private WebElement dateControl;
 	private By by;
-	private Events events;
-
-	/**
-	 * 
-	 * @param dateControlName
-	 * @param description
-	 * @param util
-	 * @param events
-	 */
-	public DateControl(String dateControlName, String description,
-			ElementFinder util, Events events) {
-		this.events = events;
-		if (dateControlName.startsWith("name")) {
-			dateControl = util.findElementByName(dateControlName);
-		} else if (dateControlName.startsWith("css")) {
-			dateControl = util.findElementByCss(dateControlName);
-		} else if (dateControlName.startsWith("//")) {
-			dateControl = util.findElementByXpath(dateControlName);
-		} else if (dateControlName.startsWith("id")) {
-			dateControl = util.findElementByID(dateControlName);
-		} else {
-			Report.log("date control is not found");
+//	private ElementUtil elementUtil;
+	
+	public DateControl(WebElement date, String desc) {
+		dateControl = date;
+		WebPage.elementList.put(dateControl, desc);
+	}
+	
+	public DateControl(String dateControlName,String description){
+		if(dateControlName.startsWith("name")){
+			by=ElementUtil.byName(dateControlName);
+		}
+		else if(dateControlName.startsWith("css")){
+			by=ElementUtil.byCss(dateControlName);
+		}
+		else if(dateControlName.startsWith("//")){
+			by=ElementUtil.byXpath(dateControlName);
+		}
+		else if(dateControlName.startsWith("id")){
+			by=ElementUtil.byID(dateControlName);
+		}
+		else{
+			System.out.println("button is not found");
 		}
 		WebPage.elementList.put(dateControl, description);
 	}
-
+	
 	/**
 	 * This method will select a date in Date controls
 	 * 
 	 * @author Pradeep Sundaram
 	 */
 	public void click() {
-		events.click(dateControl);
+		dateControl=ElementUtil.findElement(by);
+		try {
+			ElementUtil.click(dateControl);
+		} catch (CFException e) {
+			e.printStackTrace();
+		}
 	}
-
 	/**
 	 * This method will return By of the dateControl
 	 * 
 	 * @author Pradeep Sundaram
-	 * @return
+	 * @return By
 	 */
-	public By getBy() {
+	public By getBy(){
 		return by;
 	}
-
+	
 	/**
 	 * This method will return the webelement for date control
-	 * 
 	 * @author Pradeep Sundaram
-	 * @return
+	 * @return WebElement
 	 */
-	public WebElement getWebElement() {
+	public WebElement getWebElement(){
+		dateControl=ElementUtil.findElement(by);
 		return dateControl;
-	}
-
-	/**
-	 * This method will return the tool tip of the dateControl
-	 * 
-	 * @author PSubramani33
-	 * @return String
-	 */
-	public String getToolTip() {
-		Report.log("Getting the tool tip of the button "
-				+ WebPage.elementList.get(dateControl) + ".<BR>");
-		return dateControl.getAttribute("title");
 	}
 }

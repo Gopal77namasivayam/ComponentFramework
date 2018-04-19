@@ -54,161 +54,162 @@ public class TextUtil {
 	public static int y=121;
 	public static int z=122;
 
+	
 	public static int getAsciiValue(String text){
-		if(text.equals("A")){
+		if(text.toUpperCase().equals("A")){
 			return A;
 		}
-		if(text.equals("B")){
+		if(text.toUpperCase().equals("B")){
 			return B;
 		}
-		if(text.equals("C")){
+		if(text.toUpperCase().equals("C")){
 			return C;
 		}
-		if(text.equals("D")){
+		if(text.toUpperCase().equals("D")){
 			return D;
 		}
-		if(text.equals("E")){
+		if(text.toUpperCase().equals("E")){
 			return E;
 		}
-		if(text.equals("F")){
+		if(text.toUpperCase().equals("F")){
 			return F;
 		}
-		if(text.equals("G")){
+		if(text.toUpperCase().equals("G")){
 			return G;
 		}
-		if(text.equals("H")){
+		if(text.toUpperCase().equals("H")){
 			return H;
 		}
-		if(text.equals("I")){
+		if(text.toUpperCase().equals("I")){
 			return I;
 		}
-		if(text.equals("J")){
+		if(text.toUpperCase().equals("J")){
 			return J;
 		}
-		if(text.equals("K")){
+		if(text.toUpperCase().equals("K")){
 			return K;
 		}
-		if(text.equals("L")){
+		if(text.toUpperCase().equals("L")){
 			return L;
 		}
-		if(text.equals("M")){
+		if(text.toUpperCase().equals("M")){
 			return M;
 		}
-		if(text.equals("N")){
+		if(text.toUpperCase().equals("N")){
 			return N;
 		}
-		if(text.equals("O")){
+		if(text.toUpperCase().equals("O")){
 			return O;
 		}
-		if(text.equals("P")){
+		if(text.toUpperCase().equals("P")){
 			return P;
 		}
-		if(text.equals("Q")){
+		if(text.toUpperCase().equals("Q")){
 			return Q;
 		}
-		if(text.equals("R")){
+		if(text.toUpperCase().equals("R")){
 			return R;
 		}
-		if(text.equals("S")){
+		if(text.toUpperCase().equals("S")){
 			return S;
 		}
-		if(text.equals("T")){
+		if(text.toUpperCase().equals("T")){
 			return T;
 		}
-		if(text.equals("U")){
+		if(text.toUpperCase().equals("U")){
 			return U;
 		}
-		if(text.equals("V")){
+		if(text.toUpperCase().equals("V")){
 			return V;
 		}
-		if(text.equals("W")){
+		if(text.toUpperCase().equals("W")){
 			return W;
 		}
-		if(text.equals("X")){
+		if(text.toUpperCase().equals("X")){
 			return X;
 		}
-		if(text.equals("Y")){
+		if(text.toUpperCase().equals("Y")){
 			return Y;
 		}
-		if(text.equals("Z")){
+		if(text.toUpperCase().equals("Z")){
 			return Z;
 		}
-		if(text.equals("a")){
+		if(text.toLowerCase().equals("a")){
 			return a;
 		}
-		if(text.equals("b")){
+		if(text.toLowerCase().equals("b")){
 			return b;
 		}
-		if(text.equals("c")){
+		if(text.toLowerCase().equals("c")){
 			return c;
 		}
-		if(text.equals("d")){
+		if(text.toLowerCase().equals("d")){
 			return d;
 		}
-		if(text.equals("e")){
+		if(text.toLowerCase().equals("e")){
 			return e;
 		}
-		if(text.equals("f")){
+		if(text.toLowerCase().equals("f")){
 			return f;
 		}
-		if(text.equals("g")){
+		if(text.toLowerCase().equals("g")){
 			return g;
 		}
-		if(text.equals("h")){
+		if(text.toLowerCase().equals("h")){
 			return h;
 		}
-		if(text.equals("i")){
+		if(text.toLowerCase().equals("i")){
 			return i;
 		}
-		if(text.equals("j")){
+		if(text.toLowerCase().equals("j")){
 			return j;
 		}
-		if(text.equals("k")){
+		if(text.toLowerCase().equals("k")){
 			return k;
 		}
-		if(text.equals("l")){
+		if(text.toLowerCase().equals("l")){
 			return l;
 		}
-		if(text.equals("m")){
+		if(text.toLowerCase().equals("m")){
 			return m;
 		}
-		if(text.equals("n")){
+		if(text.toLowerCase().equals("n")){
 			return n;
 		}
-		if(text.equals("o")){
+		if(text.toLowerCase().equals("o")){
 			return o;
 		}
-		if(text.equals("p")){
+		if(text.toLowerCase().equals("p")){
 			return p;
 		}
-		if(text.equals("q")){
+		if(text.toLowerCase().equals("q")){
 			return q;
 		}
-		if(text.equals("r")){
+		if(text.toLowerCase().equals("r")){
 			return r;
 		}
-		if(text.equals("s")){
+		if(text.toLowerCase().equals("s")){
 			return s;
 		}
-		if(text.equals("t")){
+		if(text.toLowerCase().equals("t")){
 			return t;
 		}
-		if(text.equals("u")){
+		if(text.toLowerCase().equals("u")){
 			return u;
 		}
-		if(text.equals("v")){
+		if(text.toLowerCase().equals("v")){
 			return v;
 		}
-		if(text.equals("w")){
+		if(text.toLowerCase().equals("w")){
 			return w;
 		}
-		if(text.equals("x")){
+		if(text.toLowerCase().equals("x")){
 			return x;
 		}
-		if(text.equals("y")){
+		if(text.toLowerCase().equals("y")){
 			return y;
 		}
-		else
-			return z;
+		return z;
 	}
+
 }

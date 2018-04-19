@@ -20,7 +20,7 @@ import dto.DataObject;
 public class CSVDataProvider {
 
 	@DataProvider
-	public Iterator<Object[]> CSVFileDataProvider(ITestContext context) {
+	public static Iterator<Object[]> CSVFileDataProvider(ITestContext context) {
 		String inputFile = context.getCurrentXmlTest().getParameter(
 				"CSVFilePath");
 		List<DataObject> testData = getCSVFileContent(inputFile);
@@ -43,7 +43,7 @@ public class CSVDataProvider {
 				DataObject data = new DataObject();
 				String dataArray[] = strLine.split(",");
 //				data.setUserName(dataArray[0]);
-//				data.setPassword(dataArray[1]);
+				//data.setPassword(dataArray[1]);
 				lines.add(data);
 			}
 			in.close();

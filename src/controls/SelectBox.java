@@ -1,5 +1,6 @@
 package controls;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,77 +10,59 @@ import org.openqa.selenium.support.ui.Select;
 
 import pages.WebPage;
 import reports.Report;
-import utils.Events;
+import exception.CFException;
 
 public class SelectBox {
 	private Select selectBox;
 	private By by;
-	public Events events;
-
-	/**
-	 * Select Box Constructor
-	 * 
-	 * @author Pradeep Sundaram
-	 * @param select
-	 * @param byOfSelect
-	 * @param desc
-	 */
-	public SelectBox(String textID, String fieldDesc, ElementFinder util,
-			Events events) {
-		this.events = events;
-		if (textID.startsWith("id")) {
-			selectBox = util.findSelectByID(textID);
-		} else if (textID.startsWith("name")) {
-			selectBox = util.findSelectByName(textID);
-		} else if (textID.startsWith("css")) {
-			selectBox = util.findSelectByCss(textID);
-		} else if (textID.startsWith("//")) {
-			selectBox = util.findSelectByXpath(textID);
+//	private ElementUtil elementUtil;
+		
+	public SelectBox(String textID,String fieldDesc){
+		if(textID.startsWith("id")){
+			by=ElementUtil.byID(textID);
+		}
+		else if(textID.startsWith("name")){
+			by=ElementUtil.byName(textID);
+		}
+		else if(textID.startsWith("css")){
+			by=ElementUtil.byCss(textID);
+		}
+		else if(textID.startsWith("//")){
+			by=ElementUtil.byXpath(textID);
 		}
 		WebPage.elementList.put(selectBox, fieldDesc);
 	}
-
-	/**
-	 * Constructor for select box when By of the select box is required
-	 * 
-	 * @author Pradeep Sundaram
-	 * @param select
-	 * @param byOfSelect
-	 * @param desc
-	 */
-	public SelectBox(String textID, By byOfTf, String fieldDesc,
-			ElementFinder util, Events events) {
-		if (textID.startsWith("id")) {
-			selectBox = util.findSelectByID(textID);
-		} else if (textID.startsWith("name")) {
-			selectBox = util.findSelectByName(textID);
-		} else if (textID.startsWith("css")) {
-			selectBox = util.findSelectByCss(textID);
-		} else if (textID.startsWith("//")) {
-			selectBox = util.findSelectByXpath(textID);
-		}
-		by = byOfTf;
-		WebPage.elementList.put(selectBox, fieldDesc);
-	}
-
+	
 	/**
 	 * This method select the text in drop down for the passed index
 	 * 
 	 * @author Pradeep Sundaram
 	 * @param index
+	 * @throws IOException
 	 */
-	public void select(int index) {
-		events.select(selectBox, index);
+	public void select(int index){
+		selectBox=ElementUtil.findSelect(by);
+		try {
+			ElementUtil.select(selectBox, index);
+		} catch (CFException e) {
+			e.printStackTrace();
+		}
 	}
 
+	
 	/**
 	 * This method selects the text in drop down for the passed value
 	 * 
 	 * @author Pradeep Sundaram
 	 * @param value
 	 */
-	public void selectByValue(String value) {
-		events.selectByValue(selectBox, value);
+	public void selectByValue(String value){
+		selectBox=ElementUtil.findSelect(by);
+		try {
+			ElementUtil.selectByValue(selectBox, value);
+		} catch (CFException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -88,11 +71,22 @@ public class SelectBox {
 	 * @author Pradeep Sundaram
 	 * @param selectString
 	 */
-	public void select(String selectString) {
-		events.selectByText(selectBox, selectString);
+	public void select(String selectString)  {
+		selectBox=ElementUtil.findSelect(by);
+		try {
+			ElementUtil.selectByText(selectBox, selectString);
+		} catch (CFException e) {
+			e.printStackTrace();
+		}
 	}
-
+	/**
+	 * This method will return the selected value in the select box
+	 * 
+	 * @author Pradeep Sundaram
+	 * @return String
+	 */
 	public String getSelectedValue() {
+		selectBox=ElementUtil.findSelect(by);
 		return selectBox.getFirstSelectedOption().getText();
 	}
 
@@ -100,59 +94,59 @@ public class SelectBox {
 	 * This method will return By of the passed Select
 	 * 
 	 * @author Pradeep Sundaram
-	 * @param elem
-	 * @return
+	 * @return By
 	 */
 	public By getBy() {
 		return by;
 	}
-
 	/**
 	 * This method will return the select of the selectBox
 	 * 
 	 * @author Pradeep Sundaram
-	 * @return
+	 * @return Select
 	 */
-	public Select getSelect() {
+	public Select getSelect(){
+		selectBox=ElementUtil.findSelect(by);
 		return selectBox;
 	}
-
+	
 	/**
 	 * This method will return all the options in the select box
 	 * 
 	 * @author Pradeep Sundaram
-	 * @return
+	 * @return List
 	 */
-	public List<String> getOptions() {
-		List<String> options = new ArrayList<String>();
-		List<WebElement> list = selectBox.getOptions();
-		int size = list.size();
-		for (int i = 0; i < size; i++) {
+	public List<String> getOptions(){
+		selectBox=ElementUtil.findSelect(by);
+		List<String> options=new ArrayList<String>();
+		List<WebElement> list=selectBox.getOptions();
+		int size=list.size();
+		for(int i=0;i<size;i++){
 			options.add(list.get(i).getText());
 		}
 		return options;
 	}
-
+	
 	/**
 	 * This method will return the webelement of the select box
 	 * 
 	 * @author Pradeep Sundaram.S
 	 * @return WebElement
 	 */
-	/*
-	 * public WebElement getWebElement(){ return
-	 * WebPage.driver.findElement(this.getBy()); }
-	 */
-
+	public WebElement getWebElement(){
+		return ElementUtil.findElement(by);
+	}
+	
+	
 	/**
 	 * will return boolean based on the presence of the select box
 	 * 
+	 * @author Pradeep Sundaram S
 	 * @return boolean
 	 */
 	public boolean isDisplayed() {
-		Report.log("Checking whether the selectBox is displayed.<BR>");
-
-		return true;
+		selectBox=ElementUtil.findSelect(by);
+		Report.log("Checking whether the field \"" + WebPage.elementList.get(selectBox)+"\" is enabled.<BR>");
+      return ElementUtil.findElement(by).isDisplayed();
 	}
-
 }

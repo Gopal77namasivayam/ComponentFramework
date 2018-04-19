@@ -2,6 +2,7 @@ package pages;
 
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -15,7 +16,7 @@ import org.testng.Assert;
 
 import reports.Report;
 import utils.Events;
-import controls.ElementFinder;
+import controls.ElementUtil;
 
 public class WebPage {
 
@@ -28,8 +29,8 @@ public class WebPage {
 	public static HashMap<Object, String> elementList = new HashMap<Object, String>();
 	public static Hashtable<Object, String> elementList2 = new Hashtable<Object, String>();
 	public static String PAGE_URL = "";
-	public FirefoxDriver driver =null;
-	public ElementFinder util=new ElementFinder(driver);
+	public WebDriver driver =null;
+	public ElementUtil util=new ElementUtil(driver);
 	public Events events=new Events(driver);
 //	public String env=""; 
 	public static boolean screenshotRequired=true;
@@ -47,11 +48,12 @@ public class WebPage {
 	 * @param pageURL
 	 */
 	public WebPage(WebDriver webDriver, String pageURL) {
-		driver =(FirefoxDriver)webDriver;
+		driver =webDriver;
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 		PAGE_URL = pageURL;
-		webDriver.get(PAGE_URL);
-		webDriver.manage().window().maximize();
-		util=new ElementFinder(driver);
+		driver.get(pageURL);
+		driver.manage().window().maximize();
+		util=new ElementUtil(driver);
 		events=new Events(driver);
 	}
 	
@@ -65,8 +67,8 @@ public class WebPage {
 	 * @param webDriver
 	 */
 	public WebPage(WebDriver webDriver) {
-		driver = (FirefoxDriver)webDriver;
-		util=new ElementFinder(driver);
+		driver = webDriver;
+		util=new ElementUtil(driver);
 		events=new Events(driver);
 	}
 	
@@ -82,7 +84,7 @@ public class WebPage {
 	    WebDriverEventListener errorListener = new WebDriverEventListenerClass();
 	    driver.register(errorListener);*/
 		driver.get(PageURL);
-		util=new ElementFinder(driver);
+		util=new ElementUtil(driver);
 		events=new Events(driver);
 	}
 	
@@ -90,7 +92,7 @@ public class WebPage {
 	 * Default Constructor
 	 */
 	public WebPage() {
-	    util=new ElementFinder(driver);
+	    util=new ElementUtil(driver);
 		events=new Events(driver);
 	}
 	
@@ -108,7 +110,7 @@ public class WebPage {
 	    driver = new FirefoxDriver(profile);
 	    /*WebDriverEventListener errorListener = new WebDriverEventListenerClass();
 	    driver.register(errorListener);*/
-	    util=new ElementFinder(driver);
+	    util=new ElementUtil(driver);
 		events=new Events(driver);
 		if(PageURL.contains("dev")){
 			PageURL=PageURL.replaceAll("dev", env);
@@ -124,8 +126,8 @@ public class WebPage {
 	
 	public WebPage(WebDriver webDriver,String PageURL, String env) {
 //		this.env=env;
-	    driver = (FirefoxDriver)webDriver;
-	    util=new ElementFinder(driver);
+	    driver = webDriver;
+	    util=new ElementUtil(driver);
 		events=new Events(driver);
 		if(PageURL.contains("dev")){
 			PageURL=PageURL.replaceAll("dev", env);
