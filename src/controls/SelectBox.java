@@ -15,22 +15,12 @@ import exception.CFException;
 public class SelectBox {
 	private Select selectBox;
 	private By by;
-//	private ElementUtil elementUtil;
-		
-	public SelectBox(String textID,String fieldDesc){
-		if(textID.startsWith("id")){
-			by=ElementUtil.byID(textID);
-		}
-		else if(textID.startsWith("name")){
-			by=ElementUtil.byName(textID);
-		}
-		else if(textID.startsWith("css")){
-			by=ElementUtil.byCss(textID);
-		}
-		else if(textID.startsWith("//")){
-			by=ElementUtil.byXpath(textID);
-		}
-		WebPage.elementList.put(selectBox, fieldDesc);
+	private String selectName;
+	private String selectDesc;
+	
+	public SelectBox(String selectID,String fieldDesc){
+		selectName=selectID;
+		selectDesc=fieldDesc;
 	}
 	
 	/**
@@ -41,7 +31,9 @@ public class SelectBox {
 	 * @throws IOException
 	 */
 	public void select(int index){
+		by=getBy(selectName);
 		selectBox=ElementUtil.findSelect(by);
+		WebPage.elementList.put(selectBox, selectDesc);
 		try {
 			ElementUtil.select(selectBox, index);
 		} catch (CFException e) {
@@ -57,7 +49,9 @@ public class SelectBox {
 	 * @param value
 	 */
 	public void selectByValue(String value){
+		by=getBy(selectName);
 		selectBox=ElementUtil.findSelect(by);
+		WebPage.elementList.put(selectBox, selectDesc);
 		try {
 			ElementUtil.selectByValue(selectBox, value);
 		} catch (CFException e) {
@@ -72,7 +66,9 @@ public class SelectBox {
 	 * @param selectString
 	 */
 	public void select(String selectString)  {
+		by=getBy(selectName);
 		selectBox=ElementUtil.findSelect(by);
+		WebPage.elementList.put(selectBox, selectDesc);
 		try {
 			ElementUtil.selectByText(selectBox, selectString);
 		} catch (CFException e) {
@@ -86,7 +82,9 @@ public class SelectBox {
 	 * @return String
 	 */
 	public String getSelectedValue() {
+		by=getBy(selectName);
 		selectBox=ElementUtil.findSelect(by);
+		WebPage.elementList.put(selectBox, selectDesc);
 		return selectBox.getFirstSelectedOption().getText();
 	}
 
@@ -148,5 +146,22 @@ public class SelectBox {
 		selectBox=ElementUtil.findSelect(by);
 		Report.log("Checking whether the field \"" + WebPage.elementList.get(selectBox)+"\" is enabled.<BR>");
       return ElementUtil.findElement(by).isDisplayed();
+	}
+	
+	
+	private By getBy(String elementName){
+		By newBy=null;
+		if (elementName.startsWith("name")) {
+			by=ElementUtil.byName(elementName);
+		} else if (elementName.startsWith("css")) {
+			by=ElementUtil.byCss(elementName);
+		} else if (elementName.startsWith("//")) {
+			by=ElementUtil.byXpath(elementName);
+		} else if (elementName.startsWith("id")) {
+			by=ElementUtil.byID(elementName);
+		} else{
+			by=ElementUtil.byIDOrName(elementName);
+		}
+		return newBy;
 	}
 }

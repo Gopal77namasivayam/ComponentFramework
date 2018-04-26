@@ -10,29 +10,13 @@ import exception.CFException;
 public class Link {
 	private WebElement link;
 	private By by;
-//	private String linkName;
+	private String linkName;
 	private String linkDesc;
-//	private ElementUtil elementUtil;
 	
 
 	public Link(String linkText,String desc){
 		linkDesc=desc;
-		if(linkText.startsWith("id")){
-			by=ElementUtil.byID(linkText);
-		}
-		
-		else if(linkText.startsWith("css")){
-			by=ElementUtil.byCss(linkText);
-		}
-		
-		else if(linkText.startsWith("//")){
-			by=ElementUtil.byXpath(linkText);
-		}
-		
-		else if(linkText.startsWith("link")){
-			by=ElementUtil.byLinkText(linkText);
-		}
-		
+		linkName=linkText;
 	}
 	
 	public Link(String linkText){
@@ -46,6 +30,7 @@ public class Link {
 	 * @author Pradeep Sundaram
 	 */
 	public void click(){
+		by=getBy(linkName);
 		link=ElementUtil.findElement(by);
 		WebPage.elementList.put(link, linkDesc);
 		try {
@@ -72,6 +57,7 @@ public class Link {
 	 * @return String
 	 */
 	public String getText(){
+		by=getBy(linkName);
 		link=ElementUtil.findElement(by);
 		WebPage.elementList.put(link, linkDesc);
 		return link.getText();
@@ -82,6 +68,7 @@ public class Link {
 	 * @return WebElement
 	 */
 	public WebElement getWebElement(){
+		by=getBy(linkName);
 		link=ElementUtil.findElement(by);
 		WebPage.elementList.put(link, linkDesc);
 		return link;
@@ -101,4 +88,23 @@ public class Link {
 		return link.isDisplayed();
 	}
 
+	
+	private By getBy(String elementName){
+		By newBy=null;
+		if (linkName.startsWith("id")) {
+			newBy = ElementUtil.byID(linkName);
+		}
+		else if (linkName.startsWith("css")) {
+			newBy = ElementUtil.byCss(linkName);
+		}
+		else if (linkName.startsWith("//")) {
+			newBy = ElementUtil.byXpath(linkName);
+		}
+		else if (linkName.startsWith("link")) {
+			newBy = ElementUtil.byLinkText(linkName);
+		} else {
+			newBy = ElementUtil.byIDOrName(linkName);
+		}
+		return newBy;
+	}
 }

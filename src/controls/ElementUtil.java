@@ -1,13 +1,13 @@
 package controls;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import exception.CFException;
-
 import utils.Events;
+import exception.CFException;
 
 public class ElementUtil {
 
@@ -22,6 +22,14 @@ public class ElementUtil {
 		return driver.findElement(by);
 	}
 
+	public static WebElement findElementByID(String elementID) {
+		return driver.findElement(By.id(elementID));
+	}
+	
+	public static WebElement findElementByName(String elementID) {
+		return driver.findElement(By.name(elementID));
+	}
+	
 	public static Select findSelect(By by) {
 		return new Select(driver.findElement(by));
 	}
@@ -37,24 +45,30 @@ public class ElementUtil {
 
 	public static By byID(String elementID) {
 		String[] eleID = elementID.split("=");
+		System.out.println("element id is "+eleID[1]);
 		return By.id(eleID[1]);
 
 	}
 
 	public static By byIDOrName(String elementID) {
-		try {
-			System.out.println("the element is with ID attribute");
-			return By.id(elementID);
-		} catch (Exception e) {
-			System.out.println("the element is with name attribute");
-			return By.name(elementID);
+		By by=null;
+		try{
+			by=By.id(elementID);
+			driver.findElement(by);	
 		}
-
+		catch(NoSuchElementException e){
+			by=By.name(elementID);	
+		}
+		return by;
 	}
 	
 	public static By byName(String elementName) {
 		String[] elementID = elementName.split("=");
 		return By.name(elementID[1]);
+	}
+	
+	public static By byNameNew(String elementName) {
+		return By.name(elementName);
 	}
 
 	public static By byCss(String elementCss) {
@@ -66,7 +80,18 @@ public class ElementUtil {
 		String[] elementID = elementLinkText.split("=");
 		return By.linkText(elementID[1]);
 	}
-
+	
+	/**
+	 * This method will click the link with its ID
+	 * 
+	 * @author Pradeep Sundaram
+	 * @param elementLinkText
+	 * @return
+	 */
+	public static By byLink(String elementLinkText) {
+		return By.linkText(elementLinkText);
+	}
+	
 	public static By selectByXpath(String elementXpath) {
 		return By.xpath(elementXpath);
 	}

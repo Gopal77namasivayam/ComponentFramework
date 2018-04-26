@@ -12,8 +12,8 @@ import exception.CFException;
 public class Button {
 	private WebElement button;
 	private String desc;
+	private String buttonName;
 	private By by;
-//	private ElementUtil elementUtil;
 
 	/**
 	 * Constructor for button when mouse over or double click is required for
@@ -27,17 +27,7 @@ public class Button {
 	 */
 	public Button(String buttonID, String buttonDesc) {
 		desc=buttonDesc;
-		if (buttonID.startsWith("name")) {
-			by=ElementUtil.byName(buttonID);
-		} else if (buttonID.startsWith("css")) {
-			by=ElementUtil.byCss(buttonID);
-		} else if (buttonID.startsWith("//")) {
-			by=ElementUtil.byXpath(buttonID);
-		} else if (buttonID.startsWith("id")) {
-			by=ElementUtil.byID(buttonID);
-		} else {
-			Report.log("button is not found");
-		}
+		buttonName=buttonID;
 	}
 
 
@@ -58,11 +48,16 @@ public class Button {
 	 * @throws IOException 
 	 */
 	public void click() {
+		by=getBy(buttonName);
 		button=ElementUtil.findElement(by);
+		if(!button.isEnabled()){
+			button=ElementUtil.findElement(By.name(this.desc));
+		}
 		WebPage.elementList.put(button, desc);
 		try {
 			ElementUtil.click(button);
 		} catch (CFException e) {
+			System.out.println("inside exception");
 			e.printStackTrace();
 		}
 	}
@@ -73,6 +68,7 @@ public class Button {
 	 * @author PSubramani33
 	 */
 	public void doubleClick() {
+		by=getBy(buttonName);
 		button=ElementUtil.findElement(by);
 		WebPage.elementList.put(button, desc);
 		try {
@@ -101,6 +97,7 @@ public class Button {
 	 */
 	public boolean isDisplayed() {
 		button=ElementUtil.findElement(by);
+		
 		Report.log("Checking whether the field "+WebPage.elementList.get(button) + " is displayed.<BR>");
 		return button.isDisplayed();
 	}
@@ -115,5 +112,25 @@ public class Button {
 		button=ElementUtil.findElement(by);
 		Report.log("Getting the tool tip of the button "+WebPage.elementList.get(button) + ".<BR>");
 		return button.getAttribute("title");
+	}
+	
+	private By getBy(String elementName){
+		By newBy=null;
+		if(elementName.contains("=")){
+			if (elementName.startsWith("name")) {
+				newBy=ElementUtil.byName(elementName);
+			} else if (elementName.startsWith("css")) {
+				newBy=ElementUtil.byCss(elementName);
+			}  else if (elementName.startsWith("id")) {
+				newBy=ElementUtil.byID(elementName);
+			}	
+		}
+		else if (elementName.startsWith("//")) {
+			newBy=ElementUtil.byXpath(elementName);
+		}
+		 else{
+			 newBy=ElementUtil.byIDOrName(elementName);
+		}
+		return newBy;
 	}
 }

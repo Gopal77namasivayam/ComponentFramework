@@ -117,6 +117,50 @@ public class FailureHandler implements WebDriverEventListener {
 	public void beforeNavigateRefresh(WebDriver arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public void afterAlertAccept(WebDriver arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void afterAlertDismiss(WebDriver arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void afterChangeValueOf(WebElement arg0, WebDriver arg1,
+			CharSequence[] arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void beforeAlertAccept(WebDriver arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void beforeAlertDismiss(WebDriver arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void beforeChangeValueOf(WebElement arg0, WebDriver arg1,
+			CharSequence[] arg2) {
+		// TODO Auto-generated method stub
+		
 	} 
 
 }

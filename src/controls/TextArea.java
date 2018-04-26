@@ -12,25 +12,12 @@ import exception.CFException;
 public class TextArea {
 	private WebElement textArea;
 	private By by;
-//	private ElementUtil elementUtil;
+	private String taName;
+	private String taDesc;
 	
-	public TextArea(String textAreaName,String description){
-		if(textAreaName.startsWith("name")){
-			by=ElementUtil.byName(textAreaName);
-		}
-		else if(textAreaName.startsWith("css")){
-			by=ElementUtil.byCss(textAreaName);
-		}
-		else if(textAreaName.startsWith("//")){
-			by=ElementUtil.byXpath(textAreaName);
-		}
-		else if(textAreaName.startsWith("id")){
-			by=ElementUtil.byID(textAreaName);
-		}
-		else{
-			System.out.println("button is not found");
-		}
-		WebPage.elementList.put(textArea, description);
+	public TextArea(String taID,String desc){
+		taName=taID;
+		taDesc=desc;
 	}
 	
 	/**
@@ -41,7 +28,9 @@ public class TextArea {
 	 * @throws IOException
 	 */
 	public void type(String text){
+		by=getBy(taName);
 		textArea=ElementUtil.findElement(by);
+		WebPage.elementList.put(textArea, taDesc);
 		try {
 			ElementUtil.type(textArea, text);
 		} catch (CFException e) {
@@ -79,5 +68,21 @@ public class TextArea {
 		textArea=ElementUtil.findElement(by);
 		Report.log("Checking whether the field \"" + WebPage.elementList.get(textArea)+"\" is displayed.<BR>");
 		return textArea.isDisplayed();
+	}
+	
+	private By getBy(String elementName){
+		By newBy=null;
+		if (elementName.startsWith("name")) {
+			by=ElementUtil.byName(elementName);
+		} else if (elementName.startsWith("css")) {
+			by=ElementUtil.byCss(elementName);
+		} else if (elementName.startsWith("//")) {
+			by=ElementUtil.byXpath(elementName);
+		} else if (elementName.startsWith("id")) {
+			by=ElementUtil.byID(elementName);
+		} else{
+			by=ElementUtil.byIDOrName(elementName);
+		}
+		return newBy;
 	}
 }

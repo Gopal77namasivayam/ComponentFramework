@@ -12,6 +12,9 @@ public class TextField {
 	private WebElement textField;
 	private By by;
 	String txtDescription;
+	String txtID;
+	
+	
 	/**
 	 * This method will return the By of the text field
 	 * @author Pradeep Sundaram
@@ -32,22 +35,29 @@ public class TextField {
 	}
 	
 	public TextField(String textID,String fieldDesc){
+		txtID=textID;
 		txtDescription=fieldDesc;
-		/*if(textID.startsWith("id")){
-			by=ElementUtil.byID(textID);
+		
+		/*
+		 * removed this part to identify the element only when action is performed on webelement
+		 * if(txtID.startsWith("id")){
+			by=ElementUtil.byID(txtID);
 		}
-		else*/ if(textID.startsWith("name")){
-			by=ElementUtil.byName(textID);
+		else if(txtID.startsWith("name")){
+			by=ElementUtil.byName(txtID);
 		}
-		else if(textID.startsWith("css")){
-			by=ElementUtil.byCss(textID);
+		else if(txtID.startsWith("css")){
+			by=ElementUtil.byCss(txtID);
 		}
-		else if(textID.startsWith("//")){
-			by=ElementUtil.byXpath(textID);
+		else if(txtID.startsWith("//")){
+			System.out.println("inside xpath");
+			by=ElementUtil.byXpath(txtID);
 		}
 		else{
+			System.out.println("inside TF else for id or name");
 			by=ElementUtil.byIDOrName(textID);
-		}
+			System.out.println("by is - "+by);
+		}*/
 	}
 	
 	/**
@@ -57,6 +67,8 @@ public class TextField {
 	 * @param text
 	 */
 	public void type(String text){
+		by=getBy(txtID);
+		System.out.println("text field by is "+by);
 		textField=ElementUtil.findElement(by);
 		WebPage.elementList.put(textField, txtDescription);
 		try {
@@ -107,6 +119,22 @@ public class TextField {
 		textField=ElementUtil.findElement(by);
 		Report.log("Checking whether the field \"" + WebPage.elementList.get(textField)+"\" is displayed.<BR>");
 		return textField.isEnabled();
+	}
+	
+	private By getBy(String elementName){
+		By newBy=null;
+		if (elementName.startsWith("name")) {
+			newBy = ElementUtil.byName(elementName);
+		} else if (elementName.startsWith("css")) {
+			newBy = ElementUtil.byCss(elementName);
+		} else if (elementName.startsWith("id")) {
+			newBy = ElementUtil.byID(elementName);
+		} else if (elementName.startsWith("//")) {
+			newBy = ElementUtil.byXpath(elementName);
+		} else {
+			newBy = ElementUtil.byIDOrName(elementName);
+		}
+		return newBy;
 	}
 	
 }

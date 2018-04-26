@@ -9,6 +9,8 @@ import exception.CFException;
 public class DateControl {
 	private WebElement dateControl;
 	private By by;
+	String dateName;
+	String dateDesc;
 //	private ElementUtil elementUtil;
 	
 	public DateControl(WebElement date, String desc) {
@@ -16,22 +18,24 @@ public class DateControl {
 		WebPage.elementList.put(dateControl, desc);
 	}
 	
-	public DateControl(String dateControlName,String description){
-		if(dateControlName.startsWith("name")){
-			by=ElementUtil.byName(dateControlName);
+	public DateControl(String dateControl,String description){
+		dateName=dateControl;
+		dateDesc=description;
+		/*if(dateName.startsWith("name")){
+			by=ElementUtil.byName(dateName);
 		}
-		else if(dateControlName.startsWith("css")){
-			by=ElementUtil.byCss(dateControlName);
+		else if(dateName.startsWith("css")){
+			by=ElementUtil.byCss(dateName);
 		}
-		else if(dateControlName.startsWith("//")){
-			by=ElementUtil.byXpath(dateControlName);
+		else if(dateName.startsWith("//")){
+			by=ElementUtil.byXpath(dateName);
 		}
-		else if(dateControlName.startsWith("id")){
-			by=ElementUtil.byID(dateControlName);
+		else if(dateName.startsWith("id")){
+			by=ElementUtil.byID(dateName);
 		}
 		else{
-			System.out.println("button is not found");
-		}
+			by=ElementUtil.byIDOrName(dateName);
+		}*/
 		WebPage.elementList.put(dateControl, description);
 	}
 	
@@ -41,6 +45,21 @@ public class DateControl {
 	 * @author Pradeep Sundaram
 	 */
 	public void click() {
+		if(dateName.startsWith("name")){
+			by=ElementUtil.byName(dateName);
+		}
+		else if(dateName.startsWith("css")){
+			by=ElementUtil.byCss(dateName);
+		}
+		else if(dateName.startsWith("//")){
+			by=ElementUtil.byXpath(dateName);
+		}
+		else if(dateName.startsWith("id")){
+			by=ElementUtil.byID(dateName);
+		}
+		else{
+			by=ElementUtil.byIDOrName(dateName);
+		}
 		dateControl=ElementUtil.findElement(by);
 		try {
 			ElementUtil.click(dateControl);

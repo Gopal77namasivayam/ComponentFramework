@@ -12,25 +12,12 @@ import exception.CFException;
 public class CheckBox {
 	private WebElement checkBox;
 	private By by;
-//	private ElementUtil elementUtil;
+	String checkBoxID;
+	String desc;
 	
 	public CheckBox(String checkBoxName,String description){
-		if(checkBoxName.startsWith("name")){
-			by=ElementUtil.byName(checkBoxName);
-		}
-		else if(checkBoxName.startsWith("css")){
-			by=ElementUtil.byCss(checkBoxName);
-		}
-		else if(checkBoxName.startsWith("//")){
-			by=ElementUtil.byXpath(checkBoxName);
-		}
-		else if(checkBoxName.startsWith("id")){
-			by=ElementUtil.byID(checkBoxName);
-		}
-		else{
-			Report.log("button is not found");
-		}
-		WebPage.elementList.put(checkBox, description);
+		checkBoxID=checkBoxName;
+		desc=description;
 	}
 	
 	/**
@@ -39,7 +26,9 @@ public class CheckBox {
 	 * @author Pradeep Sundaram
 	 */
 	public void check() {
+		by=getBy(checkBoxID);
 		checkBox=ElementUtil.findElement(by);
+		WebPage.elementList.put(checkBox, desc);
 		try {
 			ElementUtil.check(checkBox);
 		} catch (CFException e) {
@@ -54,7 +43,9 @@ public class CheckBox {
 	 * @author Pradeep Sundaram
 	 */
 	public void unCheck() {
+		by=getBy(checkBoxID);
 		checkBox=ElementUtil.findElement(by);
+		WebPage.elementList.put(checkBox, desc);
 		try {
 			ElementUtil.unCheck(checkBox);
 		} catch (CFException e) {
@@ -67,7 +58,9 @@ public class CheckBox {
 	 * @throws IOException
 	 */
 	public boolean isChecked() {
+		by=getBy(checkBoxID);
 		checkBox=ElementUtil.findElement(by);
+		WebPage.elementList.put(checkBox, desc);
 		return checkBox.isSelected();
 	}
 	
@@ -104,5 +97,25 @@ public class CheckBox {
 		checkBox=ElementUtil.findElement(by);
 		Report.log("Checking whether the field \"" + WebPage.elementList.get(checkBox)+"\" is displayed.<BR>");
 		return checkBox.isDisplayed();
+	}
+	
+	private By getBy(String elementName){
+		By newBy=null;
+		if(checkBoxID.startsWith("name")){
+			newBy=ElementUtil.byName(checkBoxID);
+		}
+		else if(checkBoxID.startsWith("css")){
+			newBy=ElementUtil.byCss(checkBoxID);
+		}
+		else if(checkBoxID.startsWith("//")){
+			newBy=ElementUtil.byXpath(checkBoxID);
+		}
+		else if(checkBoxID.startsWith("id")){
+			newBy=ElementUtil.byID(checkBoxID);
+		}
+		else{
+			newBy=ElementUtil.byIDOrName(checkBoxID);
+		}
+		return newBy;
 	}
 }

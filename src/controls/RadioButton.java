@@ -10,32 +10,19 @@ import exception.CFException;
 public class RadioButton {
 	private WebElement radioButton;
 	private By by;
-//	private ElementUtil elementUtil;
+	private String rbName;
+	private String rbDesc;
 	
 	/**
 	 * Constructor of radio button 
 	 * 
 	 * @author PSubramani33
-	 * @param radioButtonName
-	 * @param description
+	 * @param rbID
+	 * @param desc
 	 */
-	public RadioButton(String radioButtonName,String description){
-		if(radioButtonName.startsWith("name")){
-			by=ElementUtil.byName(radioButtonName);
-		}
-		else if(radioButtonName.startsWith("css")){
-			by=ElementUtil.byCss(radioButtonName);
-		}
-		else if(radioButtonName.startsWith("//")){
-			by=ElementUtil.byXpath(radioButtonName);
-		}
-		else if(radioButtonName.startsWith("id")){
-			by=ElementUtil.byID(radioButtonName);
-		}
-		else{
-			System.out.println("button is not found");
-		}
-		WebPage.elementList.put(radioButton, description);
+	public RadioButton(String rbID,String desc){
+		rbName=rbID;
+		rbDesc=desc;
 	}
 	
 	/**
@@ -44,7 +31,9 @@ public class RadioButton {
 	 * @author Pradeep Sundaram
 	 */
 	public void choose() {
+		by=getBy(rbName);
 		radioButton=ElementUtil.findElement(by);
+		WebPage.elementList.put(radioButton, rbDesc);
 		try {
 			ElementUtil.choose(radioButton);
 		} catch (CFException e) {
@@ -98,4 +87,21 @@ public class RadioButton {
 		Report.log("Checking whether the field \"" + WebPage.elementList.get(radioButton)+"\" is enabled.<BR>");
       return radioButton.isEnabled();
 	}
+	
+	private By getBy(String elementName){
+		By newBy=null;
+		if (elementName.startsWith("name")) {
+			by=ElementUtil.byName(elementName);
+		} else if (elementName.startsWith("css")) {
+			by=ElementUtil.byCss(elementName);
+		} else if (elementName.startsWith("//")) {
+			by=ElementUtil.byXpath(elementName);
+		} else if (elementName.startsWith("id")) {
+			by=ElementUtil.byID(elementName);
+		} else{
+			by=ElementUtil.byIDOrName(elementName);
+		}
+		return newBy;
+	}
+	
 }

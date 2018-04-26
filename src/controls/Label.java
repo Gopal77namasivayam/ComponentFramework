@@ -9,16 +9,14 @@ import reports.Report;
 public class Label {
 	private By by;
 	private WebElement lbl;
+	private String labelName;
+	private String labelDesc;
 //	private ElementUtil elementUtil;
 	
 	public Label(String label,String description){
-		if(label.startsWith("//")){
-			by=ElementUtil.byXpath(label);
-		}
-		else if(label.startsWith("id")){
-			by=ElementUtil.byID(label);
-		}
-		WebPage.elementList.put(lbl, description);
+		
+		labelName=label;
+		labelDesc=description;
 	}
 	
 	/**
@@ -29,7 +27,9 @@ public class Label {
 	 * 
 	 */
 	public String getText() {
+		by=getBy(labelName);
 		lbl=ElementUtil.findElement(by);
+		WebPage.elementList.put(lbl, labelDesc);
 		return lbl.getText();
 	}
 	
@@ -62,5 +62,21 @@ public class Label {
 		lbl=ElementUtil.findElement(by);
 		Report.log("Checking whether the field \"" + WebPage.elementList.get(lbl)+"\" is displayed.<BR>");
 		return lbl.isDisplayed();
+	}
+	
+	private By getBy(String elementName){
+		By newBy=null;
+		if (elementName.startsWith("name")) {
+			by=ElementUtil.byName(elementName);
+		} else if (elementName.startsWith("css")) {
+			by=ElementUtil.byCss(elementName);
+		} else if (elementName.startsWith("//")) {
+			by=ElementUtil.byXpath(elementName);
+		} else if (elementName.startsWith("id")) {
+			by=ElementUtil.byID(elementName);
+		} else{
+			by=ElementUtil.byIDOrName(elementName);
+		}
+		return newBy;
 	}
 }
